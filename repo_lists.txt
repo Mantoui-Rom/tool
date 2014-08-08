@@ -1,0 +1,69 @@
+路径 [$1]		目录名 [$2]		仓库 [$3]	项目 [$4]				分支 [$5]	渠道 [$6]	From 仓库[$7]	From 项目 [$8]					From 分支[$9]	同步	待定
+android			/			mantoui 	android					kitkat		1		omnirom		android						android-4.4	1	1
+
+build			/			mantoui 	build					kitkat		1		omnirom		android_build					android-4.4	1	1
+
+vendor			omni			mantoui		vendor_mantoui				kitkat		1		omnirom		android_vendor_omni				android-4.4	1	1	
+vendor			mantoui			mantoui		vendor_mantoui				kitkat		2		omnirom		android_vendor_omni				android-4.4	1	1	
+
+frameworks		base			mantoui		frameworks_base				kitkat		1		omnirom		android_frameworks_base				android-4.4	1	1
+frameworks/opt		telephony		mantoui		frameworks_opt_telephony		kitkat		1		omnirom		android_frameworks_opt_telephony		android-4.4	1	1	
+
+hardware		ril			mantoui		hardware_ril				kitkat		1		omnirom		android_hardware_ril				android-4.4	1	1			
+hardware		ril			mantoui		hardware_ril				kitkat-cm	3		CyanogenMod	android_hardware_ril				cm-11.0		1	1			
+
+system			core			mantoui		system_core				kitkat		1		omnirom		android_system_core				android-4.4	1	1	
+system			extras			mantoui		system_extras				kitkat		1		omnirom		android_system_extras				android-4.4	1	1	
+	
+hardware/qcom		audio			mantoui		hardware_qcom_audio			kitkat		1		omnirom		android_hardware_qcom_audio			android-4.4	1	1	
+hardware/qcom		audio-caf		mantoui		hardware_qcom_audio-caf			kitkat		1		omnirom		android_hardware_qcom_audio-caf			android-4.4	1	1	
+hardware/qcom		audio-caf		mantoui		hardware_qcom_audio-caf-bfam		kitkat		1		omnirom		android_hardware_qcom_audio-caf-bfam		android-4.4	1	1
+hardware/qcom		display			mantoui		hardware_qcom_display			kitkat		1		omnirom		android_hardware_qcom_display			android-4.4	1	1
+hardware/qcom		display-caf		mantoui		hardware_qcom_display-caf		kitkat		1		omnirom		android_hardware_qcom_display-caf		android-4.4	1	1
+hardware/qcom		display-caf		mantoui		hardware_qcom_display-caf-bfam		kitkat		1		omnirom		android_hardware_qcom_display-caf-bfam		android-4.4	1	1
+hardware/qcom		media			mantoui		hardware_qcom_media			kitkat		1		omnirom		android_hardware_qcom_media			android-4.4	1	1
+hardware/qcom		media-caf		mantoui		hardware_qcom_media-caf			kitkat		1		omnirom		android_hardware_qcom_media-caf			android-4.4	1	1
+hardware/qcom		media-caf		mantoui		hardware_qcom_media-caf-bfam		kitkat		1		omnirom		android_hardware_qcom_media-caf-bfam		android-4.4	1	1
+hardware/qcom		power			mantoui		hardware_qcom_power			kitkat		1		omnirom		android_hardware_qcom_power			android-4.4	1	1				
+
+packages/apps		Browser			mantoui		packages_apps_Browser			kitkat		1		omnirom		android_packages_apps_Browser			android-4.4	1	1
+packages/apps		Camera2			mantoui		packages_apps_Camera2			kitkat		1		omnirom		android_packages_apps_Camera2			android-4.4	1	1
+packages/apps		ContactsCommon		mantoui		packages_apps_ContactsCommon		kitkat		1		omnirom		android_packages_apps_ContactsCommon		android-4.4	1	1
+packages/apps		DeskClock		mantoui		packages_apps_DeskClock			kitkat		1		omnirom		android_packages_apps_DeskClock			android-4.4	1	1
+packages/apps		Dialer			mantoui		packages_apps_Dialer			kitkat		1		omnirom		android_packages_apps_Dialer			android-4.4	1	1
+packages/apps		DSPManager		mantoui		packages_apps_DSPManager		kitkat		1		omnirom		android_packages_apps_DSPManager		android-4.4	1	1
+packages/apps		InCallUI		mantoui		packages_apps_InCallUI			kitkat		1		omnirom		android_packages_apps_InCallUI			android-4.4	1	1
+packages/apps		Launcher3		mantoui		packages_apps_Launcher3			kitkat		1		omnirom		android_packages_apps_Launcher3			android-4.4	1	1
+packages/apps		Mms			mantoui		packages_apps_Mms			kitkat		1		omnirom		android_packages_apps_Mms			android-4.4	1	1
+packages/apps		OmniGears		mantoui		packages_apps_OmniGears			kitkat		1		omnirom		android_packages_apps_OmniGears			android-4.4	1	1
+packages/apps		OmniSwitch		mantoui		packages_apps_OmniSwitch		kitkat		1		omnirom		android_packages_apps_OmniSwitch		android-4.4	1	1
+packages/apps		OmniTorch		mantoui		packages_apps_OmniTorch			kitkat		1		omnirom		android_packages_apps_OmniTorch			android-4.4	1	1
+packages/apps		PackageInstaller	mantoui		packages_apps_PackageInstaller		kitkat		1		omnirom		android_packages_apps_PackageInstaller		android-4.4	1	1
+packages/apps		Settings		mantoui		packages_apps_Settings			kitkat		1		omnirom		android_packages_apps_Settings			android-4.4	1	1
+packages/apps		MonthCalendarWidget	mantoui		packages_apps_MonthCalendarWidget	kitkat		1		omnirom		android_packages_apps_MonthCalendarWidget	android-4.4	1	1
+packages/apps		Apollo			mantoui		packages_apps_Apollo			kitkat		1		omnirom		android_packages_apps_Apollo			android-4.4	1	1
+packages/apps		Calculator		mantoui		packages_apps_Calculator		kitkat		0		-		-						-		1	1				
+packages/apps		Email			mantoui		packages_apps_Email			kitkat		1		omnirom		android_packages_apps_Email			android-4.4	1	1
+packages/apps		Exchange		mantoui		packages_apps_Exchange			kitkat		0		-		-						-		1	1
+packages/apps		Gallery2		mantoui		packages_apps_Gallery2			kitkat		1		omnirom		android_packages_apps_Gallery2			android-4.4	1	1
+packages/apps		SoundRecorder		mantoui		packages_apps_SoundRecorder		kitkat		0		-		-						-		1	1
+packages/apps		Calendar		mantoui		packages_apps_Calendar			kitkat		0		-		-						-		1	1
+packages/apps		Contacts		mantoui		packages_apps_Contacts			kitkat		0		-		-						-		1	1
+
+packages/providers	CalendarProvider	mantoui	        packages_providers_CalendarProvider     kitkat		0		-		-						-		1	1	
+packages/providers	ContactsProvider	mantoui		packages_providers_ContactsProvider	kitkat		0		-		-						-		1	1
+packages/providers	MediaProvider		mantoui		packages_providers_MediaProvider	kitkat          1		omnirom		android_packages_providers_MediaProvider	android-4.4	1	1	
+packages/providers	TelephonyProvider	mantoui		packages_providers_TelephonyProvider	kitkat		1		omnirom		android_packages_providers_TelephonyProvider	android-4.4	1	1
+packages/providers	DownloadProvider	mantoui		packages_providers_DownloadProvider	kitkat		1		omnirom		android_packages_providers_DownloadProvider	android-4.4	1	1
+
+packages/services	Telephony		mantoui		packages_services_Telephony		kitkat		1		omnirom		android_packages_services_Telephony		android-4.4	1	1
+packages/apps		LockClock		mantoui		packages_apps_LockClock			kitkat		2		CyanogenMod	android_packages_apps_LockClock			cm-11.0		1	1
+
+external		libphonenumber		mantoui		external_libphonenumber			kitkat		3		Reborn-rom	android_external_libphonenumber			kk4.4		1	1
+external		google			mantoui		external_google				kitkat		2		CyanogenMod	android_external_google				cm-11.0		1	1
+
+device/motorola		mb886			mantoui		device_motorola_mb886			kitkat		2		CyanogenMod	android_device_motorola_mb886			cm-11.0		1	1
+device/motorola		msm8960-common		mantoui		device_motorola_msm8960-common		kitkat		2		CyanogenMod	android_device_motorola_msm8960-common		cm-11.0		1	1
+device/motorola		qcom-common		mantoui		device_motorola_qcom-common		kitkat		2		CyanogenMod	android_device_motorola_qcom-common		cm-11.0		1	1
+
+kernel/motorola		msm8960-common		mantoui		kernel_motorola_msm8960-common		kitkat		2		CyanogenMod	android_kernel_motorola_msm8960-common		cm-11.0		1	1
