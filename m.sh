@@ -103,7 +103,7 @@ function get_readnum()
 	elif [ "$readtime" -gt "0" -a "$readnum" = "2" ];then
 		read -t $readtime -n $readnum num
 		case $num in
-		[0-9][1-9])
+		[0-9][0-9])
 			return $num;;		
 		NN | nn)
 			yesvno=0;;
@@ -116,7 +116,7 @@ function get_readnum()
 	elif [ "$readnum" = "2" ];then
 		read -n $readnum num
 		case $num in
-		[0-9][1-9])
+		[0-9][0-9])
 			return $num;;
 		NN | nn)
 			yesvno=0;;
@@ -269,6 +269,8 @@ function action_repository()
 		printf "\n";;
 	fetch7)
 		case $repo_get_c_6 in
+		0)
+			git fetch aosp;;
 		2)
 			git fetch origin;;
 		1 | 3)
@@ -810,6 +812,7 @@ function make_devices()
 	device_file_skip_null=$5			#是否跳过空行
 	device_make_action=$6
 
+		printf "\n\n1== $num\n\n"
 
 	if [ $device_select_rows -ge $device_file_start_row ];then
 		device_select_rowsn=`printf "%03d" $device_select_rows` #补全三位数 003
@@ -934,7 +937,7 @@ printf " \e[39m-----------------------------------------------------------------
 printf " \e[32m-----------------------------------------------------------------------------------------\033[0m\n"
 printf " \e[33m>>>>>>>>>>>>>>>>>>>>>>>>>>        源码编译管理工具箱        <<<<<<<<<<<<<<<<<<<<<<<<<<<<<\033[0m\n"
 printf " \e[34m-----------------------------------------------------------------------------------------\033[0m\n"
-printf " \e[35m------------------------------------------------------------ Mantoui 2014-08-04 ---------\033[0m\n"
+printf " \e[35m------------------------------------------------------------ Mantoui 2014-08-16 ---------\033[0m\n"
 printf " \e[36m-----------------------------------------------------------------------------------------\033[0m\n\n"
 
 
@@ -1005,11 +1008,12 @@ if [ "$yesvno" -eq "1" -a "$num" = "1" ];then
 		printf "\n\n ======== 进入编译模式， 请稍后...... "
 		cd $filepath
 		get_devices $device_files $device_file_start_row 1 2 1
-		get_readyesvno 10 -1 "确定按照以上列表配置开始编译吗？				"
+		get_readyesvno 10 1 "确定按照以上列表配置开始编译吗？				"
 			if [ "$yesvno" -eq "1" ];then
 				read -t 5 -p "\n是否执行 make clean ？ 5s 自动跳过		[Y/y] / [*]:" makec
 				case $makec in
 				Y | y)
+					cd $repodir
 					make clean 
 					printf"\n make clean 完成";;
 				*)
@@ -1035,12 +1039,15 @@ elif [ "$yesvno" -eq "1" -a "$num" = "2" ];then
 			fi
 		get_readyesvno 10 1 "开始执行 repo sync					" 
 			if [ "$yesvno" -eq "1" ];then
+				make_repository $repo_files 0 checkout9 1
 				action_repository sync
+				make_repository $repo_files 0 checkout5 1
 			else
 				printf "\n\n\e[33m ========  \033[0m								\e[36m》》》 放弃 》》\033[0m\n\n"
 			fi
 		get_readyesvno 10 1 "开始执行 Merge 合并					" 
 			if [ "$yesvno" -eq "1" ];then
+				
 				make_repository $repo_files 0 merge 1
 			else
 				printf "\n\n\e[33m ========  \033[0m								\e[36m》》》 放弃 》》\033[0m\n\n"
