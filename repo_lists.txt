@@ -1,12 +1,16 @@
 路径 [$1]		目录名 [$2]		仓库 [$3]	项目 [$4]				分支 [$5]	渠道 [$6]	From 仓库[$7]	From 项目 [$8]					From 分支[$9]	同步	待定
 android			/			mantoui 	android					kitkat		1		omnirom		android						android-4.4	1	1
+android			/			mantoui 	android					android-4.4	1		omnirom		android						android-4.4	1	1
 
 build			/			mantoui 	build					kitkat		1		omnirom		android_build					android-4.4	1	1
 
 vendor			omni			mantoui		vendor_mantoui				kitkat		1		omnirom		android_vendor_omni				android-4.4	1	1	
 vendor			mantoui			mantoui		vendor_mantoui				kitkat		2		omnirom		android_vendor_omni				android-4.4	1	1	
+vendor			supersu			mantoui		vendor_supersu				kitkat		5		-		-						-		1	1
 
 frameworks		base			mantoui		frameworks_base				kitkat		1		omnirom		android_frameworks_base				android-4.4	1	1
+frameworks		av			mantoui		frameworks_av				kitkat		1		omnirom		android_frameworks_av				android-4.4	1	1
+frameworks		native			mantoui		frameworks_native			kitkat		1		omnirom		android_frameworks_native			android-4.4	1	1
 frameworks/opt		telephony		mantoui		frameworks_opt_telephony		kitkat		1		omnirom		android_frameworks_opt_telephony		android-4.4	1	1	
 
 hardware		ril			mantoui		hardware_ril				kitkat		1		omnirom		android_hardware_ril				android-4.4	1	1			
@@ -62,8 +66,12 @@ packages/apps		LockClock		mantoui		packages_apps_LockClock			kitkat		2		Cyanogen
 external		libphonenumber		mantoui		external_libphonenumber			kitkat		3		Reborn-rom	android_external_libphonenumber			kk4.4		1	1
 external		google			mantoui		external_google				kitkat		2		CyanogenMod	android_external_google				cm-11.0		1	1
 
-device/motorola		mb886			mantoui		device_motorola_mb886			kitkat		2		CyanogenMod	android_device_motorola_mb886			cm-11.0		1	1
-device/motorola		msm8960-common		mantoui		device_motorola_msm8960-common		kitkat		2		CyanogenMod	android_device_motorola_msm8960-common		cm-11.0		1	1
-device/motorola		qcom-common		mantoui		device_motorola_qcom-common		kitkat		2		CyanogenMod	android_device_motorola_qcom-common		cm-11.0		1	1
+device/motorola		mb886			mantoui		device_motorola_mb886			kitkat		5		-		-						-		1	1
+device/motorola		msm8960-common		mantoui		device_motorola_msm8960-common		kitkat		5		-		-						-		1	1
+device/motorola		qcom-common		mantoui		device_motorola_qcom-common		kitkat		5		-		-						-		1	1
 
-kernel/motorola		msm8960-common		mantoui		kernel_motorola_msm8960-common		kitkat		2		CyanogenMod	android_kernel_motorola_msm8960-common		cm-11.0		1	1
+vendor			motorola		mantoui		vendor_motorola				kitkat		5		-		-						-		1	1
+
+kernel/motorola		msm8960-common		mantoui		kernel_motorola_msm8960-common		kitkat		5		-		-						-		1	1
+
+

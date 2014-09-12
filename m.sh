@@ -4,7 +4,7 @@ github_password=密码
 
 
 repodir=/home/mantou/android/mantoui
-rildir=/home/mantou/android/ril
+filepath=/home/mantou/android
 
 # Create REPO
 #curl -u "$github_username:$github_password" -d "{\"name\":\"$g_repo\"}" https://api.github.com/orgs/$g_origin/repos
@@ -146,55 +146,106 @@ function get_readtext()
 	N | n)
 		yesvno=0;;
 	*)
-		yesvno=0;;
+		yesvno=1;;
 	esac
 	printf "\n"
 }
 
-
-
+function action_repository_sync() 
+{
+	cd $repodir
+	repo sync  
+	while [ $? = 1 ]; do  
+		sleep 10
+		repo sync  
+	done	
+	printf "\n"
+}
 function action_repository() 
 {
 	repo_get_run=$1
 
-	cd $repodir/$repo_get_c_1
-	if [ $? = "1" ];then
+	if [ "$repo_get_c_2" = "/" ];then
 		cd $repodir/
 		case $repo_get_c_6 in
-		0)
-			printf "\n $repo_get_c_1 下没有找到这个目录 $repo_get_c_2 repo_get_c_6=$repo_get_c_6\n"
-			cd $repodir
-			repo_get_run=sync;;
-		1)
-			git clone git@github.com:$repo_get_c_7/$repo_get_c_8.git $repo_get_c_1 -b $repo_get_c_9
-			cd $repodir/$repo_get_c_1
-			repo_get_run=first_fix;;
+		0 | 1 | 3)
+			if [ ! -d "$repo_get_c_1" ];then
+				printf "\n $repodir 下没有找到这个目录 $repo_get_c_1 [repo_get_c_6=$repo_get_c_6] repo sync\n"
+				action_repository_sync
+				cd $repo_get_c_1
+			fi;;
 		2)
-			git clone git@github.com:$repo_get_c_3/$repo_get_c_4.git $repo_get_c_1 -b $repo_get_c_5;;
+			if [ ! -d "$repo_get_c_1" ];then
+				printf "\n $repodir 下没有找到这个目录 $repo_get_c_1 [repo_get_c_6=$repo_get_c_6] git clone\n"
+				git clone git@github.com:$repo_get_c_7/$repo_get_c_8.git $repo_get_c_1 -b $repo_get_c_9 -o $repo_get_c_7
+\			else
+				cd $repo_get_c_1
+				git fetch $repo_get_c_7
+			fi;;
 		3)
-			printf "\n 没有找到这个目录，repo_get_c_6=3\n";;
+			if [ ! -d "$repo_get_c_2" ];then
+				printf "\n $repodir/$repo_get_c_1 下没有找到这个目录 $repo_get_c_2 [repo_get_c_6=$repo_get_c_6] repo sync\n"
+				action_repository_sync
+				cd $repo_get_c_1
+				git remote add $repo_get_c_7 git@github.com:$repo_get_c_7/$repo_get_c_8.git
+				printf "\n git fetch $repo_get_c_7\n"
+				git fetch $repo_get_c_7
+				git remote add $repo_get_c_3 git@github.com:$repo_get_c_3/$repo_get_c_4.git
+				printf "\n git fetch $repo_get_c_3\n"
+				git fetch $repo_get_c_3
+			else
+				cd $repo_get_c_2
+				git remote -v 
+				printf "\n 如果以上remote信息不完整，请使用 first_fix\n"
+			fi;;
+		5)
+			if [ ! -d "$repo_get_c_1" ];then
+				printf "\n $repodir 下没有找到这个目录 $repo_get_c_1 [repo_get_c_6=$repo_get_c_6] git clone\n"
+				git clone git@github.com:$repo_get_c_3/$repo_get_c_4.git $repo_get_c_1 -b $repo_get_c_5 -o $repo_get_c_3
+			fi;;
 		esac
-	fi	
-	if [ "$repo_get_c_2" != "/" ];then
-		cd $repo_get_c_2
-		if [ $? = "1" ];then
-			cd $repodir/$repo_get_c_1
-			case $repo_get_c_6 in
-			0)
-				printf "\n $repo_get_c_1下没有找到这个目录$repo_get_c_2 repo_get_c_6=$repo_get_c_6\n"
-				cd $repodir
-				repo_get_run=sync;;
-			1)
-				git clone git@github.com:$repo_get_c_7/$repo_get_c_8.git $repo_get_c_2 -b $repo_get_c_9
-				cd $repodir/$repo_get_c_1/$repo_get_c_2
-				repo_get_run=first_fix;;
-			2)
-				git clone git@github.com:$repo_get_c_3/$repo_get_c_4.git $repo_get_c_2 -b $repo_get_c_5;;
-			3)
-				printf "\n 没有找到这个目录，repo_get_c_6=$repo_get_c_6 \n";;
-			esac
-
-		fi
+		cd $repodir/$repo_get_c_1
+	else
+		mkdir -p $repodir/$repo_get_c_1
+		cd $repodir/$repo_get_c_1
+		case $repo_get_c_6 in
+		0 | 1)
+			if [ ! -d "$repo_get_c_2" ];then
+				printf "\n $repodir/$repo_get_c_1 下没有找到这个目录 $repo_get_c_2 [repo_get_c_6=$repo_get_c_6] repo sync\n"
+				action_repository_sync
+				cd $repo_get_c_2
+			fi;;
+		2)
+			if [ ! -d "$repo_get_c_2" ];then
+				printf "\n $repodir/$repo_get_c_1 下没有找到这个目录 $repo_get_c_2 [repo_get_c_6=$repo_get_c_6] git clone\n"
+				git clone git@github.com:$repo_get_c_7/$repo_get_c_8.git $repo_get_c_2 -b $repo_get_c_9 -o $repo_get_c_7
+\			else
+				cd $repo_get_c_2
+				git fetch $repo_get_c_7
+			fi;;
+		3)
+			if [ ! -d "$repo_get_c_2" ];then
+				printf "\n $repodir/$repo_get_c_1 下没有找到这个目录 $repo_get_c_2 [repo_get_c_6=$repo_get_c_6] repo sync\n"
+				action_repository_sync
+				cd $repo_get_c_2
+				git remote add $repo_get_c_7 git@github.com:$repo_get_c_7/$repo_get_c_8.git
+				printf "\n git fetch $repo_get_c_7\n"
+				git fetch $repo_get_c_7
+				git remote add $repo_get_c_3 git@github.com:$repo_get_c_3/$repo_get_c_4.git
+				printf "\n git fetch $repo_get_c_3\n"
+				git fetch $repo_get_c_3
+			else
+				cd $repo_get_c_2
+				git remote -v 
+				printf "\n 如果以上remote信息不完整，请使用 first_fix\n"
+			fi;;
+		5)
+			if [ ! -d "$repo_get_c_2" ];then
+				printf "\n $repodir/$repo_get_c_1 下没有找到这个目录 $repo_get_c_2 [repo_get_c_6=$repo_get_c_6] git clone\n"
+				git clone git@github.com:$repo_get_c_3/$repo_get_c_4.git $repo_get_c_2 -b $repo_get_c_5 -o $repo_get_c_3
+			fi;;
+		esac
+		cd $repodir/$repo_get_c_1/$repo_get_c_2
 	fi
 
 	case $repo_get_run in
@@ -207,25 +258,51 @@ function action_repository()
 		done	
 		printf "\n";;
 	status)
-		git status	
+		case $repo_get_c_6 in
+		0 | 1 | 2 | 3 | 5)
+			git status;;
+		esac	
 		printf "\n";;
 	add)
-		git add -A
+		case $repo_get_c_6 in
+		0 | 1 | 2 | 3 | 5)
+			git add -A;;
+		esac
 		printf "\n";;
 	commit)
-		git add -A
-		git commit -a
+		case $repo_get_c_6 in
+		0 | 1 | 2 | 3 | 5)
+			git add -A
+			git commit -a;;
+		esac
 		printf "\n";;
 	stash)
-		git diff -b
-		git stash	
+		case $repo_get_c_6 in
+		0 | 1 | 2 | 3 | 5)
+			git diff -b
+			git stash;;
+		esac	
 		printf "\n";;
-	stashapply)
-		git stash apply	
-		git diff -b
+	stash_apply)
+		case $repo_get_c_6 in
+		0 | 1 | 2 | 3 | 5)
+			git stash apply	
+			#git diff -b;;
+		esac
 		printf "\n";;
+	stash_clear)
+		case $repo_get_c_6 in
+		0 | 1 | 2 | 3 | 5)
+			git stash clear
+			#git diff -b;;
+		esac
+		printf "\n";;
+
 	checkout5)
-		git checkout $repo_get_c_5		
+		case $repo_get_c_6 in
+		0 | 1 | 2 | 3 | 5)
+			git checkout $repo_get_c_5;;
+		esac		
 		printf "\n";;
 	checkout9)
 		case $repo_get_c_6 in
@@ -234,7 +311,10 @@ function action_repository()
 		esac	
 		printf "\n";;
 	checkoutf)
-		git checkout --f		
+		case $repo_get_c_6 in
+		0 | 1 | 2 | 3 | 5)
+			git checkout --f;;
+		esac		
 		printf "\n";;
 	merge)
 		if [ $repo_get_c_7 != $repo_get_c_8 ];then
@@ -243,12 +323,7 @@ function action_repository()
 				git checkout $repo_get_c_5
 				git merge $repo_get_c_7/$repo_get_c_9
 				printf "\n";;
-			2)
-				git fetch origin
-				git checkout $repo_get_c_5
-				git merge origin/$repo_get_c_9
-				printf "\n";;
-			3)
+			2 | 3)
 				git fetch $repo_get_c_7
 				git checkout $repo_get_c_5
 				git merge $repo_get_c_7/$repo_get_c_9
@@ -268,159 +343,215 @@ function action_repository()
 		
 		printf "\n";;
 	fetch3)
-		git fetch $repo_get_c_3		
+		case $repo_get_c_6 in
+		0 | 1 | 2 | 3 | 5)
+			git fetch $repo_get_c_3	;;
+		esac
 		printf "\n";;
 	fetch7)
 		case $repo_get_c_6 in
 		0)
 			git fetch aosp;;
-		2)
-			git fetch origin;;
-		1 | 3)
+		1 | 2 | 3)
+			git fetch $repo_get_c_7 ;;
+		9)
 			git fetch $repo_get_c_7 ;;
 		esac
 		printf "\n";;
 	push)
-		git checkout $repo_get_c_5
-		git push git@github.com:$repo_get_c_3/$repo_get_c_4.git $repo_get_c_5
+		case $repo_get_c_6 in
+		0 | 1 | 2 | 3 | 5)
+			git checkout $repo_get_c_5
+			git push git@github.com:$repo_get_c_3/$repo_get_c_4.git $repo_get_c_5
+			if [ $? = "1" ];then
+				printf " \n\n\e[33m =====   有错误，尝试先ＰＵＬＬ 修复此问题，稍后请重新ＰＵＳＨ \033[0m\n\n"
+				git pull $repo_get_c_3 $repo_get_c_5
+			fi;;
+		esac
 		printf "\n";;
 	forkin)
-		if [ $repo_get_c_7 != $repo_get_c_8 ];then
-			curl -X POST --user $github_username:$github_password -d "{\"organization\":\"$repo_get_c_3\"}" https://api.github.com/repos/$repo_get_c_7/$repo_get_c_8/forks
-		fi
+		case $repo_get_c_6 in
+		0 | 1 | 2 | 3 | 5)
+			if [ $repo_get_c_7 != $repo_get_c_8 ];then
+				curl -X POST --user $github_username:$github_password -d "{\"organization\":\"$repo_get_c_3\"}" https://api.github.com/repos/$repo_get_c_7/$repo_get_c_8/forks
+			fi;;
+		esac
 		printf "\n";;
 	forkout)
-		if [ $readtextt ];then
-			curl -X POST --user $github_username:$github_password -d "{\"organization\":\"$readtext\"}" https://api.github.com/repos/$repo_get_c_3/$repo_get_c_4/forks
-		else
-			get_readtext "请输入接受此 $repo_get_c_4 的仓库名 输入一次即可	" "仓库名"
-			readtextt=1
-			curl -X POST --user $github_username:$github_password -d "{\"organization\":\"$readtext\"}" https://api.github.com/repos/$repo_get_c_3/$repo_get_c_4/forks
-		fi
+		case $repo_get_c_6 in
+		0 | 1 | 2 | 3 | 5)
+			if [ $readtext ];then
+				curl -X POST --user $github_username:$github_password -d "{\"organization\":\"$readtext\"}" https://api.github.com/repos/$repo_get_c_3/$repo_get_c_4/forks
+			else
+				get_readtext "请输入接受此 $repo_get_c_4 的仓库名 输入一次即可	" "仓库名"
+				curl -X POST --user $github_username:$github_password -d "{\"organization\":\"$readtext\"}" https://api.github.com/repos/$repo_get_c_3/$repo_get_c_4/forks
+			fi;;
+		esac
 		printf "\n";;
 	renamerepo)
-		if [ $readtextt ];then
-			curl -X PATCH --user $github_username:$github_password -d "{\"name\":\"$readtext$repo_get_c_4\"}" https://api.github.com/repos/$repo_get_c_3/$repo_get_c_4
-		else
-			get_readtext "请输入要在 $repo_get_c_4 前添加的字段 输入一次即可		" "请输入"
-			curl -X PATCH --user $github_username:$github_password -d "{\"name\":\"$readtext$repo_get_c_4\"}" https://api.github.com/repos/$repo_get_c_3/$repo_get_c_4
-		fi
+		case $repo_get_c_6 in
+		0 | 1 | 2 | 3 | 5)
+			if [ $readtextt ];then
+				curl -X PATCH --user $github_username:$github_password -d "{\"name\":\"$readtext$repo_get_c_4\"}" https://api.github.com/repos/$repo_get_c_3/$repo_get_c_4
+			else
+				get_readtext "请输入要在 $repo_get_c_4 前添加的字段 输入一次即可		" "请输入"
+				curl -X PATCH --user $github_username:$github_password -d "{\"name\":\"$readtext$repo_get_c_4\"}" https://api.github.com/repos/$repo_get_c_3/$repo_get_c_4
+			fi;;
+		esac
 		printf "\n";;
 	first)
 		if [ $repo_get_c_10 = 1 ];then
 			curl -u "$github_username:$github_password" -d "{\"name\":\"$repo_get_c_4\"}" https://api.github.com/orgs/$repo_get_c_3/repos
+			if [ "$repo_get_c_2" != "/" ];then
+				cd $repodir/$repo_get_c_1/$repo_get_c_2
+			else
+				cd $repodir/$repo_get_c_1
+			fi
 			case $repo_get_c_6 in
-			0 | 1)
+			0)
+				git checkout -b $repo_get_c_5
+				git remote rm $repo_get_c_3
+				git remote add $repo_get_c_3 git@github.com:$repo_get_c_3/$repo_get_c_4.git
+				git remote -v
+				git checkout $repo_get_c_5
+				git push $repo_get_c_3 $repo_get_c_5 ;;
+			1 | 2)
 				git checkout $repo_get_c_9
 				git checkout -b $repo_get_c_5 
 				git remote add $repo_get_c_3 git@github.com:$repo_get_c_3/$repo_get_c_4.git
 				git remote -v
 				git checkout $repo_get_c_5
 				git push $repo_get_c_3 $repo_get_c_5 ;;
-			2)
-				if [ "$repo_get_c_2" != "/" ];then
-					mkdir -p $repodir/$repo_get_c_1
-					cd $repodir/$repo_get_c_1
-					git clone git@github.com:$repo_get_c_7/$repo_get_c_8.git $repo_get_c_2 -b $repo_get_c_9
-					cd $repo_get_c_2
-					git checkout -b $repo_get_c_5
-					git remote add $repo_get_c_3 git@github.com:$repo_get_c_3/$repo_get_c_4.git
-					git remote -v
-					git checkout $repo_get_c_5
-					git push $repo_get_c_3 $repo_get_c_5 
-				else
-					cd $repodir
-					git clone git@github.com:$repo_get_c_7/$repo_get_c_8.git $repo_get_c_1 -b $repo_get_c_9
-					cd $repo_get_c_1
-					git checkout -b $repo_get_c_5
-					git remote add $repo_get_c_3 git@github.com:$repo_get_c_3/$repo_get_c_4.git
-					git remote -v
-					git checkout $repo_get_c_5
-					git push $repo_get_c_3 $repo_get_c_5 
-				fi ;;
 			3)
-				if [ "$repo_get_c_2" != "/" ];then
-					cd $repodir/$repo_get_c_1/$repo_get_c_2
-					git remote add $repo_get_c_7 git@github.com:$repo_get_c_7/$repo_get_c_8.git
-					git fetch $repo_get_c_7
-					git checkout $repo_get_c_9		
-					git checkout -b $repo_get_c_5
-					git remote add $repo_get_c_3 git@github.com:$repo_get_c_3/$repo_get_c_4.git
-					git remote -v
-					git checkout $repo_get_c_5
-					git push $repo_get_c_3 $repo_get_c_5
-				else
-					cd $repodir
-					git remote add $repo_get_c_7 git@github.com:$repo_get_c_7/$repo_get_c_8.git
-					git fetch $repo_get_c_7
-					git checkout $repo_get_c_9
-					git checkout -b $repo_get_c_5
-					git remote add $repo_get_c_3 git@github.com:$repo_get_c_3/$repo_get_c_4.git
-					git remote -v
-					git checkout $repo_get_c_5
-					git push $repo_get_c_3 $repo_get_c_5
-				fi ;;
+				git remote add $repo_get_c_7 git@github.com:$repo_get_c_7/$repo_get_c_8.git
+				git fetch $repo_get_c_7
+				git checkout $repo_get_c_9		
+				git checkout -b $repo_get_c_5
+				git remote add $repo_get_c_3 git@github.com:$repo_get_c_3/$repo_get_c_4.git
+				git remote -v
+				git checkout $repo_get_c_5
+				git push $repo_get_c_3 $repo_get_c_5;;
+			5)
+				git checkout -b $repo_get_c_5 
+				git remote add $repo_get_c_3 git@github.com:$repo_get_c_3/$repo_get_c_4.git
+				git remote -v
+				git checkout $repo_get_c_5
+				git push $repo_get_c_3 $repo_get_c_5
+				git remote rm $repo_get_c_3;;
 			esac
 			
 		fi
 		printf "\n";;
 	first_fix)
 		if [ $repo_get_c_10 = 1 ];then
-			#curl -u "$github_username:$github_password" -d "{\"name\":\"$repo_get_c_4\"}" https://api.github.com/orgs/$repo_get_c_3/repos
+			curl -u "$github_username:$github_password" -d "{\"name\":\"$repo_get_c_4\"}" https://api.github.com/orgs/$repo_get_c_3/repos
+			if [ "$repo_get_c_2" != "/" ];then
+				cd $repodir/$repo_get_c_1/$repo_get_c_2
+			else
+				cd $repodir/$repo_get_c_1
+			fi
 			case $repo_get_c_6 in
-			0 | 1)
+			0)
+				git checkout -b $repo_get_c_5
+				git remote rm $repo_get_c_3
+				git remote add $repo_get_c_3 git@github.com:$repo_get_c_3/$repo_get_c_4.git
+				git remote -v
+				git checkout $repo_get_c_5;;		
+			1 | 2)
+				git checkout $repo_get_c_9
 				git checkout -b $repo_get_c_5
 				git remote rm $repo_get_c_3
 				git remote add $repo_get_c_3 git@github.com:$repo_get_c_3/$repo_get_c_4.git
 				git remote -v
 				git checkout $repo_get_c_5;;
-			2)
-				if [ "$repo_get_c_2" != "/" ];then
-					mkdir -p $repodir/$repo_get_c_1
-					cd $repodir/$repo_get_c_1
-					git clone git@github.com:$repo_get_c_7/$repo_get_c_8.git $repo_get_c_2 -b $repo_get_c_9
-					cd $repo_get_c_2
-					git checkout -b $repo_get_c_5
-					git remote rm $repo_get_c_3
-					git remote add $repo_get_c_3 git@github.com:$repo_get_c_3/$repo_get_c_4.git
-					git remote -v
-					git checkout $repo_get_c_5
-				else
-					cd $repodir
-					git clone git@github.com:$repo_get_c_7/$repo_get_c_8.git $repo_get_c_1 -b $repo_get_c_9
-					cd $repo_get_c_1
-					git checkout -b $repo_get_c_5
-					git remote rm $repo_get_c_3
-					git remote add $repo_get_c_3 git@github.com:$repo_get_c_3/$repo_get_c_4.git
-					git remote -v
-					git checkout $repo_get_c_5
-				fi ;;
 			3)
-				if [ "$repo_get_c_2" != "/" ];then
-					cd $repodir/$repo_get_c_1/$repo_get_c_2
-					git remote rm $repo_get_c_7
-					git remote add $repo_get_c_7 git@github.com:$repo_get_c_7/$repo_get_c_8.git
-					git fetch $repo_get_c_7
-					git checkout $repo_get_c_9		
-					git checkout -b $repo_get_c_5
-					git remote rm $repo_get_c_3
-					git remote add $repo_get_c_3 git@github.com:$repo_get_c_3/$repo_get_c_4.git
-					git remote -v
-					git checkout $repo_get_c_5
-				else
-					cd $repodir
-					git remote rm $repo_get_c_7
-					git remote add $repo_get_c_7 git@github.com:$repo_get_c_7/$repo_get_c_8.git
-					git fetch $repo_get_c_7
-					git checkout $repo_get_c_9
-					git checkout -b $repo_get_c_5
-					git remote rm $repo_get_c_3
-					git remote add $repo_get_c_3 git@github.com:$repo_get_c_3/$repo_get_c_4.git
-					git remote -v
-					git checkout $repo_get_c_5
-				fi ;;
+
+				git remote rm $repo_get_c_7
+				git remote add $repo_get_c_7 git@github.com:$repo_get_c_7/$repo_get_c_8.git
+				git fetch $repo_get_c_7
+				git checkout $repo_get_c_9		
+				git checkout -b $repo_get_c_5
+				git remote rm $repo_get_c_3
+				git remote add $repo_get_c_3 git@github.com:$repo_get_c_3/$repo_get_c_4.git
+				git remote -v
+				git checkout $repo_get_c_5;;
+			5)
+				git checkout -b $repo_get_c_5 
+				git remote add $repo_get_c_3 git@github.com:$repo_get_c_3/$repo_get_c_4.git
+				git remote -v
+				git checkout $repo_get_c_5;;
+			esac
+		fi
+		printf "\n";;
+	second_fix)
+		if [ $repo_get_c_10 = 1 ];then
+			if [ "$repo_get_c_2" != "/" ];then
+				cd $repodir/$repo_get_c_1/$repo_get_c_2
+			else
+				cd $repodir/$repo_get_c_1
+			fi
+			case $repo_get_c_6 in
+			0 | 1 | 2)
+				git remote rm $repo_get_c_3
+				git remote add $repo_get_c_3 git@github.com:$repo_get_c_3/$repo_get_c_4.git
+				git remote -v
+				git fetch $repo_get_c_3
+				git checkout $repo_get_c_5;;
+			3)
+				git remote rm $repo_get_c_7
+				git remote add $repo_get_c_7 git@github.com:$repo_get_c_7/$repo_get_c_8.git
+				git fetch $repo_get_c_7
+				git remote rm $repo_get_c_3
+				git remote add $repo_get_c_3 git@github.com:$repo_get_c_3/$repo_get_c_4.git
+				git remote -v
+				git fetch $repo_get_c_3
+				git checkout $repo_get_c_5;;
+			5)
+				git remote -v;;
 			esac
 			
+		fi
+		printf "\n";;
+	remote_add)
+		if [ $repo_get_c_10 = 1 ];then
+			case $repo_get_c_6 in
+			9)
+				if [ "$repo_get_c_2" != "/" ];then
+					cd $repodir/$repo_get_c_1/$repo_get_c_2
+					git remote -v
+					git remote add $repo_get_c_7 git@github.com:$repo_get_c_7/$repo_get_c_8.git
+					git fetch $repo_get_c_7
+					printf "\n"
+					git remote -v
+				else
+					cd $repodir/$repo_get_c_1
+					git remote -v
+					git remote add $repo_get_c_7 git@github.com:$repo_get_c_7/$repo_get_c_8.git
+					git fetch $repo_get_c_7
+					printf "\n"
+					git remote -v
+				fi;;
+			esac
+		fi
+		printf "\n";;
+	remote_rm)
+		if [ $repo_get_c_10 = 1 ];then
+			case $repo_get_c_6 in
+			9)
+				if [ "$repo_get_c_2" != "/" ];then
+					cd $repodir/$repo_get_c_1/$repo_get_c_2
+					git remote -v
+					git remote rm $repo_get_c_7
+					printf "\n"
+					git remote -v
+				else
+					cd $repodir/$repo_get_c_1
+					git remote -v
+					git remote rm $repo_get_c_7
+					printf "\n"
+					git remote -v
+				fi;;
+			esac
 		fi
 		printf "\n";;
 	esac
@@ -466,7 +597,7 @@ function make_repository()
 				printf "\n"
 				printf " \e[35m------------------------------------------------------------------------------------------------------------------------------------------------------------\033[0m\n"
 				printf "%7s %10s/%-46s %14s   |   %12s/%-46s%-14s\n"  "[$repo_get_row2]" "$repo_get_c_3"      $repo_get_c_4           "$repo_get_c_5"	"$repo_get_c_7"      $repo_get_c_8           "$repo_get_c_9"
-				printf " \e[32m  ^__^ \033[0m\33[42m = $repo_get_row2 = \033[0m\e[32m ——————— 动作： $repo_get_run ——————— 目录： \033[0m\33[42m $repo_get_c_1/$repo_get_c_2 \033[0m\e[32m ————————————————————————————————————————————————————\n\033[0m"
+				printf " \e[32m  ^__^ \033[0m\33[42m = $repo_get_row2 = \033[0m\e[32m ——————— 动作： $repo_get_run ——————— 目录： \033[0m\33[42m $repodir/$repo_get_c_1/$repo_get_c_2 \033[0m\e[32m \n\033[0m"
 				printf "\n";;	
 			esac
 			if [ $repo_get_run != "1" ];then
@@ -501,7 +632,7 @@ function make_repository()
 					repo_get_row2=`printf "%02d" $repo_get_row`
 						printf " \e[35m------------------------------------------------------------------------------------------------------------------------------------------------------------\033[0m\n"
 						printf "%7s %10s/%-46s %14s   |   %12s/%-46s%-14s\n"  "[$repo_get_row2]" "$repo_get_c_3"      $repo_get_c_4           "$repo_get_c_5"	"$repo_get_c_7"      $repo_get_c_8           "$repo_get_c_9"
-						printf " \e[32m  ^__^ \033[0m\33[42m = $repo_get_row2 = \033[0m\e[32m ——————— 动作： $repo_get_run ——————— 目录： \033[0m\33[42m $repo_get_c_1/$repo_get_c_2 \033[0m\e[32m ————————————————————————————————————————————————————\n\033[0m"
+						printf " \e[32m  ^__^ \033[0m\33[42m = $repo_get_row2 = \033[0m\e[32m ——————— 动作： $repo_get_run ——————— 目录： \033[0m\33[42m $repodir/$repo_get_c_1/$repo_get_c_2 \033[0m\e[32m \n\033[0m"
 						printf "\n";;
 					2)
 						if [ "X$r1" != "X" ];then
@@ -640,6 +771,12 @@ function action_devices()
 			elif [ $device_c_3 = "cm" ];then
 				git checkout kitkat-cm
 			fi
+			if [ "$device_c_4" != "0" ];then
+				mkdir -p $repodir/out/target/product/$device_c_1/system/app
+				mkdir -p $repodir/out/target/product/$device_c_1/system/priv-app
+				cp -p -R /home/mantou/android/apps/$device_c_4/* $repodir/out/target/product/$device_c_1/system/
+			fi
+
 			rm -rf $repodir/out/target/product/$device_c_1/system/build.prop
 			cd $repodir
 			export USE_CCACHE=1
@@ -665,6 +802,12 @@ function action_devices()
 			elif [ $device_c_3 = "cm" ];then
 				git checkout kitkat-cm
 			fi
+			if [ "$device_c_4" != "0" ];then
+				mkdir -p $repodir/out/target/product/$device_c_1/system/app
+				mkdir -p $repodir/out/target/product/$device_c_1/system/priv-app
+				cp -p -R /home/mantou/android/apps/$device_c_4/* $repodir/out/target/product/$device_c_1/system/
+			fi
+
 			rm -rf $repodir/out/target/product/$device_c_1/system/build.prop
 			cd $repodir
 			export USE_CCACHE=1
@@ -690,6 +833,12 @@ function action_devices()
 			elif [ $device_c_3 = "cm" ];then
 				git checkout kitkat-cm
 			fi
+			if [ "$device_c_4" != "0" ];then
+				mkdir -p $repodir/out/target/product/$device_c_1/system/app
+				mkdir -p $repodir/out/target/product/$device_c_1/system/priv-app
+				cp -p -R /home/mantou/android/apps/$device_c_4/* $repodir/out/target/product/$device_c_1/system/
+			fi
+
 			rm -rf $repodir/out/target/product/$device_c_1/system/build.prop
 			cd $repodir
 			export USE_CCACHE=1
@@ -714,6 +863,11 @@ function action_devices()
 				git checkout kitkat
 			elif [ $device_c_3 = "cm" ];then
 				git checkout kitkat-cm
+			fi
+			if [ "$device_c_4" != "0" ];then
+				mkdir -p $repodir/out/target/product/$device_c_1/system/app
+				mkdir -p $repodir/out/target/product/$device_c_1/system/priv-app
+				cp -p -R /home/mantou/android/apps/$device_c_4/* $repodir/out/target/product/$device_c_1/system/
 			fi
 			rm -rf $repodir/out/target/product/$device_c_1/system/build.prop
 			cd $repodir
@@ -782,8 +936,25 @@ function action_devices()
 						git status
 						printf "\n ======== 	 							\e[36m》》》保留目前的 ril 》》  \n"
 					fi
+
+					get_readyesvno 10 -1 "\n是否执行 make clean ？ 						"
+					if [ "$yesvno" -eq "1" ];then
+						cd $repodir
+						make clean 
+						printf "\n\n ======== make clean 完成 \n\n"
+					else
+						printf "\n\n ======== 你放心我没有执行 make clean  -_- \n\n"
+					fi
+
 					get_readyesvno 10 1 " 确认开始编译设备 \33[42m  $device_c_1  \033[0m  吗?				"
 					if [ "$yesvno" -eq "1" ];then
+
+						if [ "$device_c_4" != "0" ];then
+							mkdir -p $repodir/out/target/product/$device_c_1/system/app
+							mkdir -p $repodir/out/target/product/$device_c_1/system/priv-app
+							cp -p -R /home/mantou/android/apps/$device_c_4/* $repodir/out/target/product/$device_c_1/system/
+						fi
+
 						printf "\n\n"
 						rm -rf $repodir/out/target/product/$device_c_1/system/build.prop
 						cd $repodir
@@ -815,8 +986,6 @@ function make_devices()
 	device_file_skip_null=$5			#是否跳过空行
 	device_make_action=$6
 
-		printf "\n\n1== $num\n\n"
-
 	if [ $device_select_rows -ge $device_file_start_row ];then
 		device_select_rowsn=`printf "%03d" $device_select_rows` #补全三位数 003
 		if [[ "${device_can_make_row_arr3[@]/$device_select_rowsn/}" = "${device_can_make_row_arr3[@]}" ]];then
@@ -838,6 +1007,9 @@ function make_devices()
 
 function get_devices() 
 {
+
+	cd $filepath
+
 	device_file_txt=$1				#文件名
 	device_file_start_row=$2			#有效内容开始行
 	device_select_rows=$3  				#是否指定行
@@ -940,7 +1112,7 @@ printf " \e[39m-----------------------------------------------------------------
 printf " \e[32m-----------------------------------------------------------------------------------------\033[0m\n"
 printf " \e[33m>>>>>>>>>>>>>>>>>>>>>>>>>>        源码编译管理工具箱        <<<<<<<<<<<<<<<<<<<<<<<<<<<<<\033[0m\n"
 printf " \e[34m-----------------------------------------------------------------------------------------\033[0m\n"
-printf " \e[35m------------------------------------------------------------ Mantoui 2014-08-04 ---------\033[0m\n"
+printf " \e[35m------------------------------------------------------------ Mantoui 2014-09-10 ---------\033[0m\n"
 printf " \e[36m-----------------------------------------------------------------------------------------\033[0m\n\n"
 
 
@@ -967,7 +1139,7 @@ printf " \e[33m*****************************************************************
 
 
 #get_readnum 位数 时间 默认值 内容
-get_readnum 1 5 1 "请输入选择的模式前的编号					"
+get_readnum 1 30 1 "请输入选择的模式前的编号					"
 if [ "$yesvno" -eq "1" -a "$num" = "1" ];then
 	printf "\n\n"
 	#get_readyesvno 时间 默认值 内容
@@ -1003,7 +1175,7 @@ if [ "$yesvno" -eq "1" -a "$num" = "1" ];then
 
 		get_readyesvno 10 1 "是否还原之前保存的修改？					" 
 			if [ "$yesvno" -eq "1" ];then
-				make_repository $repo_files 0 stashapply 1
+				make_repository $repo_files 0 stash_apply 1
 			else
 				printf "\n\n\e[33m ========  \033[0m								\e[36m》》》 放弃 》》\033[0m\n\n"
 			fi
@@ -1042,9 +1214,7 @@ elif [ "$yesvno" -eq "1" -a "$num" = "2" ];then
 			fi
 		get_readyesvno 10 1 "开始执行 repo sync					" 
 			if [ "$yesvno" -eq "1" ];then
-				make_repository $repo_files 0 checkout9 1
 				action_repository sync
-				make_repository $repo_files 0 checkout5 1
 			else
 				printf "\n\n\e[33m ========  \033[0m								\e[36m》》》 放弃 》》\033[0m\n\n"
 			fi
@@ -1065,7 +1235,7 @@ elif [ "$yesvno" -eq "1" -a "$num" = "2" ];then
 
 		get_readyesvno 10 1 "是否还原之前保存的修改？					" 
 			if [ "$yesvno" -eq "1" ];then
-				make_repository $repo_files 0 stashapply 1
+				make_repository $repo_files 0 stash_apply 1
 			else
 				printf "\n\n\e[33m ========  \033[0m								\e[36m》》》 放弃 》》\033[0m\n\n"
 			fi
@@ -1077,22 +1247,29 @@ elif [ "$yesvno" -eq "1" -a "$num" = "3" ];then
 	printf " \e[33m*****************************************************************************************\033[0m\n\n"
 	printf " \e[33m  ----->  [01] = 同步 基础代码 repo sync	\e[35m--\033[0m\n\n" 
 	printf " \e[33m  ----->  [02] = 批量 git status 		\e[35m--\033[0m\n\n" 
-	printf " \e[33m  ----->  [03] = 批量 git add -A		\e[35m--\033[0m\n\n" 
-	printf " \e[33m  ----->  [04] = 批量 git commit -a		\e[35m--提交所有没有提交的代码\033[0m\n\n" 
-	printf " \e[33m  ----->  [05] = 批量 git stash		\e[35m--保存所有没有提交的代码\033[0m\n\n" 
-	printf " \e[33m  ----->  [06] = 批量 git stash apply		\e[35m--恢复所有没有提交的代码\033[0m\n\n" 
-	printf " \e[33m  ----->  [07] = 批量 git check --f		\e[35m--清除所有未提交修改 Remote\033[0m\n\n" 
-	printf " \e[33m  ----->  [08] = 批量 git merge c_5		\e[35m--批量合并到第五列\033[0m\n\n" 
-	printf " \e[33m  ----->  [09] = 批量 git fetch c_3		\e[35m--批量同步\033[0m\n\n" 
-	printf " \e[33m  ----->  [10] = 批量 git fetch c_7		\e[35m--批量同步\033[0m\n\n" 
-	printf " \e[33m  ----->  [11] = 批量 git push			\e[35m--批量推送本地为同步的提交\033[0m\n\n" 
-	printf " \e[33m  ----->  [12] = 批量 Fork C_7/C_8 到 C_3	\e[35m--批量fork第七列仓库的第八列的项目到第三列的仓库\033[0m\n\n" 
-	printf " \e[33m  ----->  [13] = 批量 Fork C_3/C_4 到 C_7	\e[35m--批量fork第三列仓库的第四列的项目到第七列的仓库\033[0m\n\n" 
-	printf " \e[33m  ----->  [14] = 批量 renamerepo		\e[35m--批量修改第三列仓库的第四列的项目前加一个前缀\033[0m\n\n" 
+	printf " \e[33m  ----->  [03] = 批量 git checkout c_5 		\e[35m--\033[0m\n\n" 
+	printf " \e[33m  ----->  [04] = 批量 git add -A		\e[35m--\033[0m\n\n" 
+	printf " \e[33m  ----->  [05] = 批量 git commit -a		\e[35m--提交所有没有提交的代码\033[0m\n\n" 
+	printf " \e[33m  ----->  [06] = 批量 git stash		\e[35m--保存所有没有提交的代码\033[0m\n\n" 
+	printf " \e[33m  ----->  [07] = 批量 git stash apply		\e[35m--恢复所有没有提交的代码\033[0m\n\n" 
+	printf " \e[33m  ----->  [08] = 批量 git stash clear		\e[35m--清楚所有保存的代码\033[0m\n\n" 
+	printf " \e[33m  ----->  [09] = 批量 git check --f		\e[35m--清除所有未提交修改 Remote\033[0m\n\n" 
+	printf " \e[33m  ----->  [10] = 批量 git merge c_5		\e[35m--批量合并到第五列\033[0m\n\n" 
+	printf " \e[33m  ----->  [11] = 批量 git fetch c_3		\e[35m--批量同步\033[0m\n\n" 
+	printf " \e[33m  ----->  [12] = 批量 git fetch c_7		\e[35m--批量同步\033[0m\n\n" 
+	printf " \e[33m  ----->  [13] = 批量 git push			\e[35m--批量推送本地为同步的提交\033[0m\n\n" 
+	printf " \e[33m  ----->  [14] = 批量 Fork C_7/C_8 到 C_3	\e[35m--批量fork第七列仓库的第八列的项目到第三列的仓库\033[0m\n\n" 
+	printf " \e[33m  ----->  [15] = 批量 Fork C_3/C_4 到 C_7	\e[35m--批量fork第三列仓库的第四列的项目到第七列的仓库\033[0m\n\n" 
+	printf " \e[33m  ----->  [16] = 批量 renamerepo		\e[35m--批量修改第三列仓库的第四列的项目前加一个前缀\033[0m\n\n" 
 	printf " \e[33m----------------------------------------------------------------------------------------\033[0m\n\n"
+
+
+	printf " \e[33m  ----->  [66] = 批量 remote add			\e[35m--只针对 $ 6 来源为 9 的项目\033[0m\n\n" 
+	printf " \e[33m  ----->  [67] = 批量 remote rm			\e[35m--只针对 $ 6 来源为 9 的项目\033[0m\n\n" 
 	printf " \e[33m  ----->  [77] = 批量 add commit push C+3		\e[35m--\033[0m\n\n" 
 	printf " \e[33m  ----->  [88] = 批量把基础代码 First		\e[35m--将根据文件批量建立分支和项目并push 到你的仓库\033[0m\n\n" 
-	printf " \e[33m  ----->  [99] = 批量修复 First FIX		\e[35m--这里将只进行本地的分支建立以及Remote\033[0m\n\n"
+	printf " \e[33m  ----->  [90] = 批量修复 First FIX		\e[35m--这里将只进行本地的分支建立以及Remote\033[0m\n\n"
+	printf " \e[33m  ----->  [91] = 批量修复 second FIX		\e[35m--这里将\033[0m\n\n"
 	printf " \e[33m*****************************************************************************************\033[0m\n\n"
 	get_readnum 2 30 01 "请输入选择的模式前的编号					"
 	if [ "$yesvno" -eq "1" ];then
@@ -1100,42 +1277,52 @@ elif [ "$yesvno" -eq "1" -a "$num" = "3" ];then
 		get_repository $repo_files $repo_file_start_row 0
 	fi	
 	if [ "$yesvno" -eq "1" -a "$num" = "01" ];then
-		make_repository $repo_files 0 sync 1
+		action_repository sync
 	elif [ "$yesvno" -eq "1" -a "$num" = "02" ];then
 		make_repository $repo_files 0 status 1
 	elif [ "$yesvno" -eq "1" -a "$num" = "03" ];then
-		make_repository $repo_files 0 add 1
+		make_repository $repo_files 0 checkout5 1
 	elif [ "$yesvno" -eq "1" -a "$num" = "04" ];then
-		make_repository $repo_files 0 commit 1
+		make_repository $repo_files 0 add 1
 	elif [ "$yesvno" -eq "1" -a "$num" = "05" ];then
-		make_repository $repo_files 0 stash 1
+		make_repository $repo_files 0 commit 1
 	elif [ "$yesvno" -eq "1" -a "$num" = "06" ];then
-		make_repository $repo_files 0 stashapply 1
+		make_repository $repo_files 0 stash 1
 	elif [ "$yesvno" -eq "1" -a "$num" = "07" ];then
-		make_repository $repo_files 0 checkoutf 1
+		make_repository $repo_files 0 stash_apply 1
 	elif [ "$yesvno" -eq "1" -a "$num" = "08" ];then
-		make_repository $repo_files 0 merge 1
+		make_repository $repo_files 0 stash_clear 1
 	elif [ "$yesvno" -eq "1" -a "$num" = "09" ];then
-		make_repository $repo_files 0 fetch3 1
+		make_repository $repo_files 0 checkoutf 1
 	elif [ "$yesvno" -eq "1" -a "$num" = "10" ];then
-		make_repository $repo_files 0 fetch7 1
+		make_repository $repo_files 0 merge 1
 	elif [ "$yesvno" -eq "1" -a "$num" = "11" ];then
-		make_repository $repo_files 0 push 1
+		make_repository $repo_files 0 fetch3 1
 	elif [ "$yesvno" -eq "1" -a "$num" = "12" ];then
-		make_repository $repo_files 0 forkin 1
+		make_repository $repo_files 0 fetch7 1
 	elif [ "$yesvno" -eq "1" -a "$num" = "13" ];then
-		make_repository $repo_files 0 forkout 1
+		make_repository $repo_files 0 push 1
 	elif [ "$yesvno" -eq "1" -a "$num" = "14" ];then
+		make_repository $repo_files 0 forkin 1
+	elif [ "$yesvno" -eq "1" -a "$num" = "15" ];then
+		make_repository $repo_files 0 forkout 1
+	elif [ "$yesvno" -eq "1" -a "$num" = "16" ];then
 		make_repository $repo_files 0 renamerepo 1
 
+	elif [ "$yesvno" -eq "1" -a "$num" = "66" ];then
+		make_repository $repo_files 0 remote_add 1
+	elif [ "$yesvno" -eq "1" -a "$num" = "67" ];then
+		make_repository $repo_files 0 remote_rm 1
 	elif [ "$yesvno" -eq "1" -a "$num" = "77" ];then
-		make_repository $repo_files $repo_num checkout5 1
-		make_repository $repo_files $repo_num commit 1
-		make_repository $repo_files $repo_num push 1
+		make_repository $repo_files 0 checkout5 1
+		make_repository $repo_files 0 commit 1
+		make_repository $repo_files 0 push 1
 	elif [ "$yesvno" -eq "1" -a "$num" = "88" ];then
 		make_repository $repo_files 0 first 1
-	elif [ "$yesvno" -eq "1" -a "$num" = "99" ];then
+	elif [ "$yesvno" -eq "1" -a "$num" = "90" ];then
 		make_repository $repo_files 0 first_fix 1
+	elif [ "$yesvno" -eq "1" -a "$num" = "91" ];then
+		make_repository $repo_files 0 second_fix 1
 	fi
 elif [ "$yesvno" -eq "1" -a "$num" = "4" ];then
 	if [ "$yesvno" -eq "1" ];then
@@ -1162,9 +1349,11 @@ elif [ "$yesvno" -eq "1" -a "$num" = "4" ];then
 		printf " \e[33m  ----->  [12] = Fork C_3/C_4 到 C_7		\e[35m--批量fork第三列仓库的第四列的项目到第七列的仓库\033[0m\n" 
 		printf " \e[33m  ----->  [13] = renamerepo			\e[35m--批量修改第三列仓库的第四列的项目前加一个前缀\033[0m\n" 
 		printf " \e[33m----------------------------------------------------------------------------------------\033[0m\n"
+		printf " \e[33m  ----->  [77] = Remote add			\e[35m--只针对 $ 6 来源为 9 的项目\033[0m\n" 
 		printf " \e[33m  ----->  [77] = add commit push C+3		\e[35m--\033[0m\n" 
 		printf " \e[33m  ----->  [88] = 把基础代码 First		\e[35m--将根据文件批量建立分支和项目并push 到你的仓库\033[0m\n" 
-		printf " \e[33m  ----->  [99] = 修复 First FIX		\e[35m--这里将只进行本地的分支建立以及Remote\033[0m\n"
+		printf " \e[33m  ----->  [90] = 修复 First FIX		\e[35m--这里将只进行本地的分支建立以及Remote\033[0m\n"
+		printf " \e[33m  ----->  [91] = 修复 second FIX		\e[35m--这里将\033[0m\n"
 		printf " \e[33m*****************************************************************************************\033[0m\n\n"
 		get_readnum 2 30 0 "请输入选择的模式前的编号					"
 	
@@ -1177,7 +1366,7 @@ elif [ "$yesvno" -eq "1" -a "$num" = "4" ];then
 		elif [ "$yesvno" -eq "1" -a "$num" = "04" ];then
 			make_repository $repo_files $repo_num stash 1
 		elif [ "$yesvno" -eq "1" -a "$num" = "05" ];then
-			make_repository $repo_files $repo_num stashapply 1
+			make_repository $repo_files $repo_num stash_apply 1
 		elif [ "$yesvno" -eq "1" -a "$num" = "06" ];then
 			make_repository $repo_files $repo_num checkoutf 1
 		elif [ "$yesvno" -eq "1" -a "$num" = "07" ];then
@@ -1195,14 +1384,18 @@ elif [ "$yesvno" -eq "1" -a "$num" = "4" ];then
 		elif [ "$yesvno" -eq "1" -a "$num" = "13" ];then
 			make_repository $repo_files $repo_num renamerepo 1
 
+		elif [ "$yesvno" -eq "1" -a "$num" = "66" ];then
+			make_repository $repo_files $repo_num remote_add 1
 		elif [ "$yesvno" -eq "1" -a "$num" = "77" ];then
 			make_repository $repo_files $repo_num checkout5 1
 			make_repository $repo_files $repo_num commit 1
 			make_repository $repo_files $repo_num push 1
 		elif [ "$yesvno" -eq "1" -a "$num" = "88" ];then
 			make_repository $repo_files $repo_num first 1
-		elif [ "$yesvno" -eq "1" -a "$num" = "99" ];then
+		elif [ "$yesvno" -eq "1" -a "$num" = "90" ];then
 			make_repository $repo_files $repo_num first_fix 1
+		elif [ "$yesvno" -eq "1" -a "$num" = "91" ];then
+			make_repository $repo_files $repo_num second_fix 1
 		fi
 	fi
 elif [ "$yesvno" -eq "1" -a "$num" = "8" ];then
